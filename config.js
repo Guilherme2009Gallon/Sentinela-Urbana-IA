@@ -20,7 +20,7 @@ const CONFIG = {
   //
   // Se deixar em branco, o sistema simplesmente não tenta
   // enviar e-mail — o resto do programa funciona normalmente.
-  SERVIDOR_EMAIL_URL: "",
+  SERVIDOR_EMAIL_URL: "https://sentinela-urbana-ia.vercel.app/api/enviar-email",
 
   // Link "pré-preenchido" do Google Forms (veja o README.md
   // para saber como gerar o seu). Precisa conter exatamente o
