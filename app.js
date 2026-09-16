@@ -30,6 +30,7 @@ const estado = {
   historico: [],
 
   emailProntoParaEnviar: false,
+  modoEmailAtivo: true, // true = tenta enviar e-mail; false = só o link no histórico
 };
 
 
@@ -56,6 +57,8 @@ const btnPermitirCamera = document.getElementById("btn-permitir-camera");
 const btnRedefinirArea = document.getElementById("btn-redefinir-area");
 const btnAdicionarEvento = document.getElementById("btn-adicionar-evento");
 const btnFinalizar = document.getElementById("btn-finalizar");
+const btnModoEnvio = document.getElementById("btn-modo-envio");
+const interruptorValor = document.getElementById("interruptor-valor");
 
 
 // =========================================================
@@ -1001,7 +1004,7 @@ function registrarEvento(nivel, motivo, foto = null) {
 
   renderizarHistorico();
 
-  if (nivel === "Alto" || nivel === "Médio") {
+  if ((nivel === "Alto" || nivel === "Médio") && estado.modoEmailAtivo) {
     enviarEmailAlerta(evento);
   }
 }
@@ -1024,6 +1027,13 @@ function renderizarHistorico() {
            </a>`
         : "";
 
+      const botaoResponder =
+        ev.nivel === "Alto" || ev.nivel === "Médio"
+          ? `<a href="${construirLinkResposta(ev)}" target="_blank" rel="noopener" class="link-responder-historico">
+               Responder a este alerta →
+             </a>`
+          : "";
+
       return `
         <div class="item-historico ${classeRisco}">
           <div class="linha-texto-historico">
@@ -1031,10 +1041,34 @@ function renderizarHistorico() {
             <span>${ev.motivo} — ${ev.nivel}</span>
           </div>
           ${miniatura}
+          ${botaoResponder}
         </div>`;
     })
     .join("");
 }
+
+
+// =========================================================
+// BOTÃO "MODO DE ENVIO" (E-mail ↔ Só link no histórico)
+// =========================================================
+
+btnModoEnvio.addEventListener("click", () => {
+  estado.modoEmailAtivo = !estado.modoEmailAtivo;
+
+  if (estado.modoEmailAtivo) {
+    interruptorValor.textContent = "E-mail";
+    interruptorValor.classList.remove("modo-historico");
+  } else {
+    interruptorValor.textContent = "Só histórico";
+    interruptorValor.classList.add("modo-historico");
+  }
+
+  console.log(
+    estado.modoEmailAtivo
+      ? "Modo de envio: e-mail ativado."
+      : "Modo de envio: só o link no histórico, e-mail desativado."
+  );
+});
 
 
 // =========================================================
@@ -1123,19 +1157,12 @@ function reduzirFotoParaEmail(fotoDataUrl, larguraMax = 480, qualidade = 0.6) {
   });
 }
 
-async function enviarEmailAlerta(evento) {
-  if (!estado.emailProntoParaEnviar) {
-    console.log(
-      "[e-mail não configurado] Alerta que seria enviado:",
-      evento
-    );
-    return;
-  }
-
-  // Link para a NOSSA página de resposta (resposta.html), no
-  // mesmo endereço de onde o site está sendo servido. Todos os
-  // detalhes do alerta vão dentro de UM único parâmetro (em
-  // JSON), evitando usar "&" no meio da URL.
+// Monta o link da nossa página de resposta (resposta.html) a
+// partir de um evento — usado tanto no e-mail quanto no botão
+// de responder direto no histórico da tela. Todos os detalhes
+// do alerta vão dentro de UM único parâmetro (em JSON), evitando
+// usar "&" no meio da URL.
+function construirLinkResposta(evento) {
   const dadosAlerta = encodeURIComponent(
     JSON.stringify({
       nivel: evento.nivel,
@@ -1145,8 +1172,19 @@ async function enviarEmailAlerta(evento) {
     })
   );
 
-  const linkFormulario =
-    `${window.location.origin}/resposta.html?dados=${dadosAlerta}`;
+  return `${window.location.origin}/resposta.html?dados=${dadosAlerta}`;
+}
+
+async function enviarEmailAlerta(evento) {
+  if (!estado.emailProntoParaEnviar) {
+    console.log(
+      "[e-mail não configurado] Alerta que seria enviado:",
+      evento
+    );
+    return;
+  }
+
+  const linkFormulario = construirLinkResposta(evento);
 
   // Reduz a foto pra uma versão mais leve antes de mandar —
   // mantém o payload pequeno (nosso servidor e o próprio Gmail

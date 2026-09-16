@@ -1,4 +1,4 @@
-python -m http.server 8000<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -122,6 +122,11 @@ python -m http.server 8000<!DOCTYPE html>
         <span>Risco</span>
         <span id="stat-risco" class="risco-baixo">BAIXO</span>
       </div>
+
+      <button id="btn-modo-envio" class="interruptor-modo" type="button" title="Alterna entre enviar por e-mail ou só deixar o link no histórico">
+        <span class="interruptor-rotulo">Envio:</span>
+        <span id="interruptor-valor" class="interruptor-valor">E-mail</span>
+      </button>
 
       <button id="btn-adicionar-evento" class="botao botao-alerta botao-full">
         Adicionar Evento

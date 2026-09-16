@@ -419,6 +419,40 @@ body {
 .risco-medio  { color: var(--medio) !important; }
 .risco-alto   { color: var(--alto) !important; }
 
+.interruptor-modo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 6px 10px;
+  margin-bottom: 4px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Rajdhani', sans-serif;
+  transition: border-color 0.15s ease;
+}
+
+.interruptor-modo:hover {
+  border-color: var(--cyan);
+}
+
+.interruptor-rotulo {
+  color: var(--text-dim);
+  font-size: 0.78rem;
+}
+
+.interruptor-valor {
+  color: var(--cyan);
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+
+.interruptor-valor.modo-historico {
+  color: var(--medio);
+}
+
 /* ===================================================
    BOTÕES
 =================================================== */
@@ -559,7 +593,8 @@ body {
 
 .item-historico {
   display: flex;
-  gap: 8px;
+  flex-direction: column;
+  gap: 6px;
   padding: 6px 8px;
   border-radius: 3px;
   background: rgba(255, 255, 255, 0.02);
@@ -576,9 +611,45 @@ body {
 .item-historico.risco-item-medio { border-left-color: var(--medio); }
 .item-historico.risco-item-baixo { border-left-color: var(--baixo); }
 
+.linha-texto-historico {
+  display: flex;
+  gap: 8px;
+}
+
 .item-historico .hora {
   color: var(--text-dim);
   white-space: nowrap;
+}
+
+.foto-evento {
+  display: block;
+  width: 100%;
+  max-width: 180px;
+  border-radius: 3px;
+  border: 1px solid var(--card-border);
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.foto-evento:hover {
+  border-color: var(--cyan);
+}
+
+.link-responder-historico {
+  display: inline-block;
+  color: var(--cyan);
+  font-size: 0.72rem;
+  text-decoration: none;
+  border: 1px solid var(--cyan);
+  border-radius: 3px;
+  padding: 4px 8px;
+  width: fit-content;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.link-responder-historico:hover {
+  background-color: var(--cyan);
+  color: var(--bg);
 }
 
 .lista-historico::-webkit-scrollbar {
