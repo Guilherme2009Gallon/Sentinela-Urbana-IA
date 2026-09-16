@@ -53,9 +53,31 @@ module.exports = async (req, res) => {
     return;
   }
 
-  const secaoFoto = foto
+  // Gmail bloqueia imagens embutidas como base64 direto no HTML
+  // (data:image/...;base64,...) por segurança — a imagem some
+  // silenciosamente. O jeito que funciona é anexar a foto como
+  // um anexo com "CID" (Content-ID) e referenciar esse CID no
+  // HTML, em vez do base64 direto.
+  const anexos = [];
+
+  if (foto) {
+    const combinacao = foto.match(/^data:image\/(\w+);base64,(.+)$/);
+    if (combinacao) {
+      const tipoImagem = combinacao[1]; // ex: "jpeg"
+      const dadosBase64 = combinacao[2];
+
+      anexos.push({
+        filename: `foto-alerta.${tipoImagem}`,
+        content: dadosBase64,
+        encoding: "base64",
+        cid: "foto-alerta", // referenciado no HTML como cid:foto-alerta
+      });
+    }
+  }
+
+  const secaoFoto = anexos.length > 0
     ? `<p style="margin:0 0 20px 0;">
-         <img src="${foto}" alt="Foto do momento do alerta"
+         <img src="cid:foto-alerta" alt="Foto do momento do alerta"
               style="max-width:100%; border-radius:6px; border:1px solid #1c2f57; display:block;">
        </p>`
     : "";
@@ -123,6 +145,7 @@ module.exports = async (req, res) => {
       to: EMAIL_DESTINATARIO,
       subject: `Alerta ${nivel} - Sentinela Urbana IA`,
       html: htmlEmail,
+      attachments: anexos,
     });
 
     res.status(200).json({ sucesso: true });
