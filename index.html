@@ -1,0 +1,155 @@
+python -m http.server 8000<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sentinela Urbana IA</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ===================================================
+       CABEÇALHO
+  =================================================== -->
+  <header class="topo">
+    <div class="marca">
+      <span class="marca-titulo">SENTINELA URBANA IA</span>
+      <span class="marca-sub">visão computacional · análise de risco · tempo real</span>
+    </div>
+    <div class="status-geral">
+      <span id="relogio" class="relogio">--:--:--</span>
+      <span id="status-camera" class="pilula pilula-offline">
+        <span class="ponto"></span>
+        CÂMERA OFFLINE
+      </span>
+    </div>
+  </header>
+
+  <!-- ===================================================
+       LINHA PRINCIPAL: CÂMERA + MAPA
+  =================================================== -->
+  <main class="linha-principal">
+
+    <!-- CÂMERA -->
+    <section class="painel painel-camera">
+      <div class="painel-cabecalho">
+        <h2>Câmera ao Vivo</h2>
+        <div class="ferramentas-camera">
+          <button id="btn-permitir-camera" class="botao botao-alerta">
+            Ativar Câmera
+          </button>
+          <button id="btn-redefinir-area" class="botao botao-secundario" disabled>
+            Redefinir Área
+          </button>
+        </div>
+      </div>
+
+      <div class="palco-camera" id="palco-camera">
+        <video id="video" autoplay playsinline muted></video>
+        <canvas id="canvas-overlay"></canvas>
+        <div class="mira-canto mira-tl"></div>
+        <div class="mira-canto mira-tr"></div>
+        <div class="mira-canto mira-bl"></div>
+        <div class="mira-canto mira-br"></div>
+        <div id="mensagem-camera" class="mensagem-camera">
+          <p>Clique em "Ativar Câmera" para iniciar a Sentinela.</p>
+          <p class="mensagem-camera-dica">
+            Depois, clique e arraste sobre o vídeo para desenhar a área restrita.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAPA / RADAR -->
+    <section class="painel painel-mapa">
+      <div class="painel-cabecalho">
+        <h2>Mapa da Cidade / Radar</h2>
+      </div>
+      <svg id="mapa-radar" viewBox="0 0 300 220" class="mapa-svg">
+        <defs>
+          <pattern id="grade" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#123" stroke-width="1"/>
+          </pattern>
+          <radialGradient id="varredura-gradiente" gradientUnits="userSpaceOnUse" cx="150" cy="110" r="95">
+            <stop offset="0%" stop-color="#00F0FF" stop-opacity="0.6" />
+            <stop offset="100%" stop-color="#00F0FF" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+        <rect width="300" height="220" fill="url(#grade)" />
+        <circle cx="150" cy="110" r="95" fill="none" stroke="#12325a" stroke-width="1" />
+        <circle cx="150" cy="110" r="55" fill="none" stroke="#12325a" stroke-width="1" />
+        <g class="radar-varredura">
+          <path d="M 150 110 L 150 15 A 95 95 0 0 1 217 43 Z" fill="url(#varredura-gradiente)" />
+        </g>
+        <circle class="radar-ponto" cx="90" cy="80" r="4" fill="#00FF9F" />
+        <circle class="radar-ponto" cx="205" cy="150" r="4" fill="#00F0FF" />
+        <circle id="marcador-alerta" cx="150" cy="110" r="6" fill="#FF2A6D" opacity="0" />
+      </svg>
+    </section>
+
+  </main>
+
+  <!-- ===================================================
+       LINHA INFERIOR: ALERTAS + ESTATÍSTICAS + HISTÓRICO
+  =================================================== -->
+  <footer class="linha-inferior">
+
+    <section class="painel painel-alertas">
+      <div class="painel-cabecalho">
+        <h2>Alertas</h2>
+      </div>
+      <div id="caixa-alerta" class="caixa-alerta">
+        Nenhum alerta.
+      </div>
+    </section>
+
+    <section class="painel painel-estatisticas">
+      <div class="painel-cabecalho">
+        <h2>Estatísticas</h2>
+      </div>
+
+      <div class="linha-stat">
+        <span>Pessoas</span>
+        <span id="stat-pessoas">0</span>
+      </div>
+      <div class="linha-stat">
+        <span>Alertas hoje</span>
+        <span id="stat-alertas">0</span>
+      </div>
+      <div class="linha-stat linha-stat-risco">
+        <span>Risco</span>
+        <span id="stat-risco" class="risco-baixo">BAIXO</span>
+      </div>
+
+      <button id="btn-adicionar-evento" class="botao botao-alerta botao-full">
+        Adicionar Evento
+      </button>
+      <button id="btn-finalizar" class="botao botao-secundario botao-full">
+        Finalizar
+      </button>
+    </section>
+
+    <section class="painel painel-historico">
+      <div class="painel-cabecalho">
+        <h2>Histórico</h2>
+      </div>
+      <div id="lista-historico" class="lista-historico">
+        <p class="historico-vazio">Nenhum evento registrado ainda.</p>
+      </div>
+    </section>
+
+  </footer>
+
+</div>
+
+<!-- Bibliotecas de detecção (TensorFlow.js + modelo COCO-SSD) -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js"></script>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>

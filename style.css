@@ -1,0 +1,608 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --bg: #0A1128;
+  --card-bg: #0D1630;
+  --card-border: #17264a;
+  --cyan: #00F0FF;
+  --cyan-dim: #0a5a66;
+  --text: #E0F7FA;
+  --text-dim: #7f93b8;
+  --text-faint: #4a5c82;
+  --alto: #FF2A6D;
+  --medio: #FFD60A;
+  --baixo: #00FF9F;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(0, 240, 255, 0.06), transparent 40%),
+    radial-gradient(circle at 85% 90%, rgba(0, 240, 255, 0.04), transparent 40%),
+    repeating-linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.012) 0px,
+      rgba(255, 255, 255, 0.012) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+}
+
+.app {
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+/* ===================================================
+   CABEÇALHO
+=================================================== */
+
+/* ===================================================
+   SEQUÊNCIA DE INICIALIZAÇÃO
+   (roda uma vez, quando a página carrega)
+=================================================== */
+
+@keyframes entrada-sistema {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.topo,
+.painel {
+  animation: entrada-sistema 0.5s ease backwards;
+}
+
+.topo             { animation-delay: 0s; }
+.painel-camera    { animation-delay: 0.08s; }
+.painel-mapa      { animation-delay: 0.16s; }
+.painel-alertas   { animation-delay: 0.24s; }
+.painel-estatisticas { animation-delay: 0.3s; }
+.painel-historico { animation-delay: 0.36s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .topo, .painel {
+    animation: none;
+  }
+}
+
+.topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--card-border);
+  flex-shrink: 0;
+}
+
+.marca-titulo {
+  display: block;
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--cyan);
+  text-shadow: 0 0 18px rgba(0, 240, 255, 0.35);
+}
+
+.marca-sub {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin-top: 3px;
+}
+
+.status-geral {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.relogio {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1rem;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.pilula {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.76rem;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 3px;
+  border: 1px solid currentColor;
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.pilula .ponto {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.pilula-offline { color: var(--alto); }
+.pilula-online  { color: var(--baixo); }
+.pilula-atencao { color: var(--medio); animation: pulsar 1.4s ease-in-out infinite; }
+.pilula-alerta  { color: var(--alto); animation: piscar 1s infinite; }
+
+@keyframes piscar {
+  50% { opacity: 0.35; }
+}
+
+@keyframes pulsar {
+  50% { opacity: 0.6; }
+}
+
+/* ===================================================
+   LAYOUT PRINCIPAL
+=================================================== */
+
+.linha-principal {
+  display: grid;
+  grid-template-columns: 2.6fr 1fr;
+  gap: 14px;
+  flex: 1;
+  min-height: 0;
+}
+
+.linha-inferior {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.4fr;
+  gap: 14px;
+  flex: 0 0 205px;
+  min-height: 0;
+}
+
+@media (max-width: 900px) {
+  html, body {
+    height: auto;
+    overflow: auto;
+  }
+
+  .app {
+    height: auto;
+    overflow: visible;
+  }
+
+  .linha-principal,
+  .linha-inferior {
+    grid-template-columns: 1fr;
+  }
+}
+
+.painel {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* A câmera é o elemento de destaque: cantos retos (técnico,
+   tipo visor), não o mesmo cartão arredondado dos painéis
+   secundários. */
+.painel-camera {
+  border-radius: 4px;
+  border-color: #1c2f57;
+}
+
+.painel-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.painel-cabecalho h2 {
+  font-size: 0.83rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--text);
+}
+
+/* ===================================================
+   CÂMERA
+=================================================== */
+
+.ferramentas-camera {
+  display: flex;
+  gap: 8px;
+}
+
+.palco-camera {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  background: #04060f;
+  overflow: hidden;
+  border: 1px solid #1c2f57;
+}
+
+.palco-camera video,
+.palco-camera canvas {
+  position: absolute;
+}
+
+.palco-camera canvas {
+  cursor: crosshair;
+}
+
+/* Marcações de canto — visor tipo câmera de segurança */
+.mira-canto {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--cyan);
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 5;
+  animation: respirar 3s ease-in-out infinite;
+}
+.mira-tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+.mira-tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+.mira-bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+.mira-br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+
+@keyframes respirar {
+  50% { opacity: 0.2; }
+}
+
+/* Quando o risco vira Alto, a moldura da câmera pulsa em
+   vermelho e as miras de canto aceleram/mudam de cor — chamado
+   via JS (classe .alerta-ativo em #palco-camera). */
+.palco-camera.alerta-ativo {
+  animation: pulso-borda 0.9s ease-in-out infinite;
+}
+
+.palco-camera.alerta-ativo .mira-canto {
+  border-color: var(--alto);
+  opacity: 0.9;
+  animation: respirar 0.9s ease-in-out infinite;
+}
+
+@keyframes pulso-borda {
+  0%, 100% { border-color: #1c2f57; }
+  50% { border-color: var(--alto); }
+}
+
+.mensagem-camera {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 6px;
+  padding: 20px;
+  color: var(--text-dim);
+  background: rgba(4, 6, 15, 0.88);
+  z-index: 4;
+}
+
+.mensagem-camera p {
+  font-size: 1rem;
+}
+
+.mensagem-camera-dica {
+  font-size: 0.78rem !important;
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--text-faint);
+}
+
+.mensagem-camera.escondida {
+  display: none;
+}
+
+/* ===================================================
+   MAPA / RADAR
+=================================================== */
+
+.mapa-svg {
+  width: 100%;
+  flex: 1;
+  background: #04060f;
+  border: 1px solid var(--card-border);
+}
+
+.radar-varredura {
+  transform-box: view-box;
+  transform-origin: 150px 110px;
+  animation: girar 4s linear infinite;
+}
+
+@keyframes girar {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.radar-ponto {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.radar-ponto-piscando {
+  animation: ponto-flash 0.35s ease;
+}
+
+@keyframes ponto-flash {
+  0%   { transform: scale(1); filter: none; }
+  50%  { transform: scale(2); filter: drop-shadow(0 0 6px #ffffff); }
+  100% { transform: scale(1); filter: none; }
+}
+
+/* ===================================================
+   ALERTAS
+=================================================== */
+
+.caixa-alerta {
+  flex: 1;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  white-space: pre-line;
+  line-height: 1.5;
+  transition: color 0.3s ease;
+}
+
+.caixa-alerta.alerta-alto {
+  color: var(--alto);
+  font-weight: 600;
+}
+
+.caixa-alerta.alerta-medio {
+  color: var(--medio);
+  font-weight: 600;
+}
+
+/* ===================================================
+   ESTATÍSTICAS
+=================================================== */
+
+.linha-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  padding: 3px 0;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.linha-stat span:last-child {
+  color: var(--text);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.linha-stat-risco span:last-child {
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+  transition: color 0.3s ease;
+}
+
+.risco-baixo  { color: var(--baixo) !important; }
+.risco-medio  { color: var(--medio) !important; }
+.risco-alto   { color: var(--alto) !important; }
+
+/* ===================================================
+   BOTÕES
+=================================================== */
+
+.botao {
+  position: relative;
+  overflow: hidden;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 7px 14px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.1s ease;
+}
+
+.botao::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  transform: skewX(-20deg);
+  transition: left 0.5s ease;
+  pointer-events: none;
+}
+
+.botao:hover:not(:disabled)::after {
+  left: 130%;
+}
+
+/* Marcações de canto que "travam o alvo" no botão ao passar
+   o mouse — reaproveita a linguagem visual da mira da câmera. */
+.botao::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background:
+    linear-gradient(to right, var(--cyan) 2px, transparent 2px) 0 0 / 9px 2px no-repeat,
+    linear-gradient(to right, var(--cyan) 2px, transparent 2px) 0 100% / 9px 2px no-repeat,
+    linear-gradient(to left, var(--cyan) 2px, transparent 2px) 100% 0 / 9px 2px no-repeat,
+    linear-gradient(to left, var(--cyan) 2px, transparent 2px) 100% 100% / 9px 2px no-repeat,
+    linear-gradient(to bottom, var(--cyan) 2px, transparent 2px) 0 0 / 2px 9px no-repeat,
+    linear-gradient(to bottom, var(--cyan) 2px, transparent 2px) 100% 0 / 2px 9px no-repeat,
+    linear-gradient(to top, var(--cyan) 2px, transparent 2px) 0 100% / 2px 9px no-repeat,
+    linear-gradient(to top, var(--cyan) 2px, transparent 2px) 100% 100% / 2px 9px no-repeat;
+  opacity: 0;
+  transform: scale(1.3);
+  transition: opacity 0.2s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+
+.botao:hover:not(:disabled)::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* "Ping" expandindo a partir do ponto exato do clique —
+   criado via JS (veja ativarPingBotoes em app.js/resposta.js) */
+.botao-ping {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  margin-top: -3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.65);
+  transform: scale(0);
+  animation: ping-expandir 0.55s ease-out;
+  pointer-events: none;
+}
+
+@keyframes ping-expandir {
+  from { transform: scale(0); opacity: 0.9; }
+  to   { transform: scale(22); opacity: 0; }
+}
+
+.botao:hover:not(:disabled) {
+  filter: brightness(1.15);
+}
+
+.botao:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.botao:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.botao:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+.botao-alerta {
+  background: var(--alto);
+  color: #fff;
+}
+
+.botao-secundario {
+  background: transparent;
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+.botao-full {
+  width: 100%;
+}
+
+/* ===================================================
+   HISTÓRICO
+=================================================== */
+
+.lista-historico {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.76rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.historico-vazio {
+  color: var(--text-dim);
+}
+
+.item-historico {
+  display: flex;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 3px solid var(--text-dim);
+  animation: item-entra 0.3s ease;
+}
+
+@keyframes item-entra {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.item-historico.risco-item-alto  { border-left-color: var(--alto); }
+.item-historico.risco-item-medio { border-left-color: var(--medio); }
+.item-historico.risco-item-baixo { border-left-color: var(--baixo); }
+
+.item-historico .hora {
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.lista-historico::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lista-historico::-webkit-scrollbar-thumb {
+  background: var(--card-border);
+  border-radius: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .radar-varredura,
+  .pilula-alerta,
+  .pilula-atencao,
+  .mira-canto,
+  .palco-camera.alerta-ativo,
+  .palco-camera.alerta-ativo .mira-canto,
+  .item-historico,
+  .radar-ponto-piscando,
+  .botao::after,
+  .botao::before,
+  .botao-ping {
+    animation: none;
+    transition: none;
+  }
+}

@@ -1,0 +1,49 @@
+<!--
+  Esse arquivo NÃO é mais usado. Era o template colado no painel
+  do EmailJS, mas o projeto trocou pra uma função serverless
+  própria (api/enviar-email.js) que já monta esse mesmo visual
+  direto em JavaScript, conectando no Gmail via SMTP. Veja o
+  README.md, seção "Configurar o envio de e-mail".
+
+  Deixado aqui só como referência do visual original.
+-->
+<div style="background-color:#0A1128; padding:32px 16px; font-family: Arial, sans-serif;">
+  <div style="max-width:500px; margin:0 auto; background-color:#0D1630; border:1px solid #17264a; border-radius:10px; padding:28px;">
+
+    <p style="color:#00F0FF; font-size:12px; letter-spacing:2px; text-transform:uppercase; margin:0 0 8px 0; font-family: 'Courier New', monospace;">
+      Sentinela Urbana IA
+    </p>
+
+    <h2 style="color:#FF2A6D; margin:0 0 16px 0; font-size:22px;">
+      🚨 Risco {{nivel}} detectado
+    </h2>
+
+    <p style="color:#E0F7FA; margin:0 0 8px 0; font-size:15px;">
+      <b>Motivo:</b> {{motivo}}
+    </p>
+    <p style="color:#E0F7FA; margin:0 0 16px 0; font-size:15px;">
+      <b>Data:</b> {{data}} &nbsp;&nbsp; <b>Hora:</b> {{hora}}
+    </p>
+    <p style="color:#7f93b8; margin:0 0 24px 0; font-size:14px;">
+      Verifique o painel de monitoramento imediatamente.
+    </p>
+
+    <p style="color:#E0F7FA; margin:0 0 14px 0; font-size:15px;">
+      <b>📋 Responda ao alerta:</b> conte o que você observou e deixe seu nome registrado.
+    </p>
+
+    <p style="margin:0 0 20px 0;">
+      <a href="{{link_formulario}}"
+         style="background-color:#00F0FF; color:#0A1128; padding:14px 24px;
+                text-decoration:none; border-radius:6px; font-weight:bold;
+                display:inline-block; font-size:15px;">
+        Preencher formulário de resposta
+      </a>
+    </p>
+
+    <p style="color:#5a6b8c; font-size:12px; margin:20px 0 0 0; border-top:1px solid #17264a; padding-top:16px;">
+      Sua resposta fica registrada automaticamente para a equipe de monitoramento revisar.
+    </p>
+
+  </div>
+</div>

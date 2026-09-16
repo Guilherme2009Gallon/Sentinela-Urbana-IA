@@ -1,0 +1,9 @@
+{
+  "name": "sentinela-urbana-ia",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sentinela Urbana IA — painel de monitoramento com IA, rodando no navegador",
+  "dependencies": {
+    "nodemailer": "^6.9.14"
+  }
+}

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Responder Alerta — Sentinela Urbana IA</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  body {
+    height: auto;
+    overflow-y: auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .app-resposta {
+    width: 100%;
+    max-width: 460px;
+    margin: 48px 16px;
+  }
+
+  .marca-resposta {
+    text-align: center;
+    margin-bottom: 18px;
+  }
+
+  .marca-resposta .marca-titulo {
+    font-size: 1.3rem;
+  }
+
+  .cartao-resposta {
+    position: relative;
+    background: var(--card-bg);
+    border: 1px solid #1c2f57;
+    border-radius: 4px;
+    padding: 30px 28px;
+    animation: entrada-sistema 0.5s ease backwards;
+  }
+
+  @keyframes entrada-sistema {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cartao-resposta { animation: none; }
+  }
+
+  .cartao-resposta h1 {
+    color: var(--text);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .cartao-resposta > p.subtitulo {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+  }
+
+  .resumo-alerta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 3px solid var(--card-border);
+    padding: 12px 14px;
+    margin: 18px 0 26px;
+    line-height: 1.7;
+    transition: border-color 0.2s ease;
+  }
+
+  .resumo-alerta.nivel-alto  { border-left-color: var(--alto); }
+  .resumo-alerta.nivel-medio { border-left-color: var(--medio); }
+  .resumo-alerta.nivel-baixo { border-left-color: var(--baixo); }
+
+  .campo { margin-bottom: 20px; }
+
+  .campo > label.rotulo {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .campo input[type="text"] {
+    width: 100%;
+    padding: 11px 13px;
+    border-radius: 4px;
+    border: 1px solid var(--card-border);
+    background: #060a1a;
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    transition: border-color 0.15s ease;
+  }
+
+  .campo input[type="text"]:focus-visible,
+  .opcao:focus-within {
+    outline: none;
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 1px var(--cyan);
+  }
+
+  .opcao {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 13px;
+    border-radius: 4px;
+    border: 1px solid var(--card-border);
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .opcao:hover { border-color: var(--cyan); }
+  .opcao input { accent-color: var(--cyan); }
+
+  #mensagem-final {
+    display: none;
+    text-align: center;
+    padding: 24px 0 6px;
+  }
+
+  #mensagem-final.visivel {
+    display: block;
+    animation: confirma-entra 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes confirma-entra {
+    from { opacity: 0; transform: scale(0.9); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #mensagem-final.visivel { animation: none; }
+  }
+
+  #form-resposta.escondido { display: none; }
+
+  .rodape-resposta {
+    color: var(--text-faint);
+    font-size: 0.78rem;
+    margin-top: 22px;
+    padding-top: 16px;
+    border-top: 1px solid var(--card-border);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-resposta">
+
+  <div class="marca-resposta">
+    <span class="marca-titulo">SENTINELA URBANA IA</span>
+    <div class="marca-sub">central de monitoramento inteligente</div>
+  </div>
+
+  <div class="cartao-resposta">
+    <div class="mira-canto mira-tl"></div>
+    <div class="mira-canto mira-tr"></div>
+    <div class="mira-canto mira-bl"></div>
+    <div class="mira-canto mira-br"></div>
+
+    <h1>Responder ao alerta</h1>
+    <p class="subtitulo">Conte o que você observou no local</p>
+
+    <div id="resumo-alerta" class="resumo-alerta">Carregando detalhes do alerta...</div>
+
+    <form id="form-resposta">
+      <div class="campo">
+        <label class="rotulo" for="campo-nome">Seu nome</label>
+        <input type="text" id="campo-nome" required autocomplete="name">
+      </div>
+
+      <div class="campo">
+        <span class="rotulo">O que você observou?</span>
+
+        <label class="opcao">
+          <input type="radio" name="resposta" value="Falso alarme" required>
+          ✅ Falso alarme
+        </label>
+        <label class="opcao">
+          <input type="radio" name="resposta" value="Risco confirmado">
+          🚨 Risco confirmado
+        </label>
+        <label class="opcao">
+          <input type="radio" name="resposta" value="Preciso verificar / não tenho certeza">
+          ❓ Preciso verificar / não tenho certeza
+        </label>
+      </div>
+
+      <button type="submit" class="botao botao-alerta botao-full" id="btn-enviar">
+        Enviar resposta
+      </button>
+    </form>
+
+    <div id="mensagem-final">
+      <p style="color: var(--baixo); font-size: 1.15rem;">✅ Resposta registrada</p>
+      <p style="color: var(--text-dim); font-size: 0.85rem; margin-top: 8px;">
+        Sua resposta já está salva. Pode fechar esta página.
+      </p>
+    </div>
+
+    <div class="rodape-resposta">
+      Toda resposta fica registrada para a equipe de monitoramento revisar.
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="resposta.js"></script>
+</body>
+</html>
