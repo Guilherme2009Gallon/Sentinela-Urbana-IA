@@ -176,7 +176,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr 1.4fr;
   gap: 14px;
-  flex: 0 0 205px;
+  flex: 0 0 245px;
   min-height: 0;
 }
 
