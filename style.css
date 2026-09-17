@@ -662,14 +662,16 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .radar-varredura,
+  /* O radar (varredura girando + pontos piscando) NÃO entra
+     aqui de propósito: ele é parte essencial da demonstração
+     do projeto, não um enfeite. As demais animações abaixo
+     continuam respeitando a preferência de movimento reduzido. */
   .pilula-alerta,
   .pilula-atencao,
   .mira-canto,
   .palco-camera.alerta-ativo,
   .palco-camera.alerta-ativo .mira-canto,
   .item-historico,
-  .radar-ponto-piscando,
   .botao::after,
   .botao::before,
   .botao-ping {
