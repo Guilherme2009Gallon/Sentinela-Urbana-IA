@@ -51,7 +51,7 @@ const CONFIG = {
   CLASSES_OBJETOS_SUSPEITOS: ["backpack", "handbag", "suitcase", "bottle"],
 
   // Segundos parado + sem supervisão para o objeto virar alerta
-  TEMPO_OBJETO_SUSPEITO: 3, // reage mais rápido pra demonstrar (antes 4)
+  TEMPO_OBJETO_SUSPEITO: 4, // reage mais rápido pra demonstrar (antes 4)
 
   // Distância (em % da largura do vídeo) para considerar que é
   // "o mesmo objeto" ou "a mesma pessoa" de um frame pro outro
