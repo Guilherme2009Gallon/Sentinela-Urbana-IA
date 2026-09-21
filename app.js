@@ -579,9 +579,13 @@ function processarDeteccoes(deteccoes) {
   estado.pessoasRastreadasArea = novoRastreioArea;
 
   // ===== AGLOMERAÇÃO =====
+  // Guarda o centro E a altura de cada pessoa. A altura serve
+  // como "régua" pra medir proximidade de forma justa, perto
+  // ou longe da câmera (ver detectarAglomeracao).
   const centros = pessoas.map((p) => ({
     x: p.bbox[0] + p.bbox[2] / 2,
     y: p.bbox[1] + p.bbox[3] / 2,
+    altura: p.bbox[3],
   }));
 
   const { aglomeracaoDetectada, tamanhoGrupo, centroGrupo, raioGrupo } =
@@ -678,13 +682,21 @@ function detectarAglomeracao(centros) {
     if (ra !== rb) pais[rb] = ra;
   }
 
-  const limiar = CONFIG.DISTANCIA_AGLOMERACAO * canvas.width;
-
+  // Duas pessoas são consideradas "próximas" se a distância
+  // entre elas for menor que um múltiplo da altura MÉDIA delas
+  // duas. Usar a altura como régua (em vez de uma fração fixa
+  // da tela) mantém a detecção justa perto E longe da câmera:
+  // pessoas longe aparecem pequenas e coladas, pessoas perto
+  // aparecem grandes e espaçadas — e a régua escala junto.
   for (let i = 0; i < centros.length; i++) {
     for (let j = i + 1; j < centros.length; j++) {
       const dx = centros[i].x - centros[j].x;
       const dy = centros[i].y - centros[j].y;
       const distancia = Math.sqrt(dx * dx + dy * dy);
+
+      const alturaMedia = (centros[i].altura + centros[j].altura) / 2;
+      const limiar = CONFIG.FATOR_DISTANCIA_AGLOMERACAO * alturaMedia;
+
       if (distancia <= limiar) unir(i, j);
     }
   }

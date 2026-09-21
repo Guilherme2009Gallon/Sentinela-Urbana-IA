@@ -20,7 +20,7 @@ const CONFIG = {
   //
   // Se deixar em branco, o sistema simplesmente não tenta
   // enviar e-mail — o resto do programa funciona normalmente.
-  SERVIDOR_EMAIL_URL: "https://sentinela-urbana-ia.vercel.app/api/enviar-email",
+  SERVIDOR_EMAIL_URL: "",
 
   // Link "pré-preenchido" do Google Forms (veja o README.md
   // para saber como gerar o seu). Precisa conter exatamente o
@@ -34,7 +34,7 @@ const CONFIG = {
   // =======================================================
 
   // Confiança mínima (0 a 1) para considerar uma detecção válida
-  CONFIANCA_MINIMA: 0.55,
+  CONFIANCA_MINIMA: 0.45, // meio-termo mais sensível (antes 0.55)
 
   // Confiança mínima ESPECÍFICA para algumas classes, que
   // sobrescreve o CONFIANCA_MINIMA geral acima. Útil pra
@@ -51,7 +51,7 @@ const CONFIG = {
   CLASSES_OBJETOS_SUSPEITOS: ["backpack", "handbag", "suitcase", "bottle"],
 
   // Segundos parado + sem supervisão para o objeto virar alerta
-  TEMPO_OBJETO_SUSPEITO: 4,
+  TEMPO_OBJETO_SUSPEITO: 3, // reage mais rápido pra demonstrar (antes 4)
 
   // Distância (em % da largura do vídeo) para considerar que é
   // "o mesmo objeto" ou "a mesma pessoa" de um frame pro outro
@@ -63,7 +63,7 @@ const CONFIG = {
   // frame dispare (ou cancele) um alerta — a pessoa precisa
   // aparecer consistentemente por esse tempo, não só piscar
   // uma vez.
-  TEMPO_CONFIRMACAO_AREA_MS: 300,
+  TEMPO_CONFIRMACAO_AREA_MS: 200, // confirma um pouco mais rápido (antes 300)
 
   // Por quanto tempo (ms) um objeto/pessoa que sumiu do
   // reconhecimento continua "vivo" no rastreamento, esperando
@@ -78,9 +78,14 @@ const CONFIG = {
   // considerar que ela está "supervisionando" um objeto
   DISTANCIA_SUPERVISAO: 0.15,
 
-  // Distância (em % da largura do vídeo) para considerar duas
-  // pessoas "próximas" (formando um grupo/aglomeração)
-  DISTANCIA_AGLOMERACAO: 0.18,
+  // Duas pessoas são "próximas" se a distância entre elas for
+  // menor que este fator vezes a altura média delas. Ex: 1.5
+  // significa "mais perto que 1,5 vez a altura de uma pessoa".
+  // Aumentar deixa a detecção de aglomeração mais SENSÍVEL
+  // (agrupa gente mais distante); diminuir deixa mais RÍGIDA
+  // (só agrupa quem está bem colado). Como usa a altura das
+  // pessoas como régua, funciona igual perto ou longe da câmera.
+  FATOR_DISTANCIA_AGLOMERACAO: 1.8, // agrupa gente um pouco mais distante (antes 1.5)
 
   // Quantidade mínima de pessoas próximas para virar alerta
   MINIMO_PESSOAS_AGLOMERACAO: 3,
