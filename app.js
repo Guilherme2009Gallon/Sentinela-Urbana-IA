@@ -1123,6 +1123,14 @@ btnAdicionarEvento.addEventListener("click", () => {
       ? capturarFotoAlerta(estado.bboxAlertaAtual)
       : null;
 
+  // Só pede o e-mail (abre o modal) quando há um risco de fato
+  // (Alto ou Médio). Se o risco está Baixo, não há alerta pra
+  // notificar — registra direto no histórico, sem modal.
+  if (nivel !== "Alto" && nivel !== "Médio") {
+    registrarEvento(nivel, motivo, foto, { forcarSemEmail: true });
+    return;
+  }
+
   eventoPendente = { nivel, motivo, foto };
 
   // Abre o modal pra pessoa digitar o e-mail
