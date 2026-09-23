@@ -999,7 +999,7 @@ function registrarEventoAutomatico(nivel, motivo) {
 // HISTÓRICO
 // =========================================================
 
-function registrarEvento(nivel, motivo, foto = null) {
+function registrarEvento(nivel, motivo, foto = null, opcoes = {}) {
   const agora = new Date();
 
   const evento = {
@@ -1016,8 +1016,16 @@ function registrarEvento(nivel, motivo, foto = null) {
 
   renderizarHistorico();
 
+  // Decide se e pra quem manda o e-mail:
+  // - forcarSemEmail: registra só no histórico, não envia nada
+  //   (usado quando a pessoa deixou o campo de e-mail em branco)
+  // - emailDestino: manda pra esse e-mail específico (o que a
+  //   pessoa digitou), em vez do destinatário de monitoramento
+  // - nenhum dos dois: comportamento padrão (alertas automáticos)
+  if (opcoes.forcarSemEmail) return;
+
   if ((nivel === "Alto" || nivel === "Médio") && estado.modoEmailAtivo) {
-    enviarEmailAlerta(evento);
+    enviarEmailAlerta(evento, opcoes.emailDestino || null);
   }
 }
 
@@ -1084,8 +1092,16 @@ btnModoEnvio.addEventListener("click", () => {
 
 
 // =========================================================
-// BOTÃO "ADICIONAR EVENTO"
+// BOTÃO "ADICIONAR EVENTO" + MODAL DE E-MAIL
 // =========================================================
+
+const modalEmail = document.getElementById("modal-email");
+const modalCampoEmail = document.getElementById("modal-campo-email");
+const modalBtnConfirmar = document.getElementById("modal-btn-confirmar");
+const modalBtnCancelar = document.getElementById("modal-btn-cancelar");
+
+// Guarda os dados do evento entre "abrir o modal" e "confirmar"
+let eventoPendente = null;
 
 btnAdicionarEvento.addEventListener("click", () => {
   const nivel = estado.riscoAtual;
@@ -1099,15 +1115,50 @@ btnAdicionarEvento.addEventListener("click", () => {
     motivo = "Evento registrado manualmente";
   }
 
-  // Só tira foto quando o risco está de fato elevado — é o
-  // que causou o alerta que estamos registrando. Recorta só a
-  // região relevante, quando conhecida.
+  // Tira a foto AGORA (no momento do clique), pra capturar a
+  // cena exata do alerta — não depois que a pessoa digitar o
+  // e-mail, quando a cena já pode ter mudado.
   const foto =
     nivel === "Alto" || nivel === "Médio"
       ? capturarFotoAlerta(estado.bboxAlertaAtual)
       : null;
 
-  registrarEvento(nivel, motivo, foto);
+  eventoPendente = { nivel, motivo, foto };
+
+  // Abre o modal pra pessoa digitar o e-mail
+  modalCampoEmail.value = "";
+  modalEmail.classList.remove("escondida");
+  modalCampoEmail.focus();
+});
+
+function fecharModalEmail() {
+  modalEmail.classList.add("escondida");
+  eventoPendente = null;
+}
+
+modalBtnConfirmar.addEventListener("click", () => {
+  if (!eventoPendente) return;
+
+  const email = modalCampoEmail.value.trim();
+  const { nivel, motivo, foto } = eventoPendente;
+
+  if (email === "") {
+    // Campo vazio: só registra no histórico, sem enviar e-mail
+    registrarEvento(nivel, motivo, foto, { forcarSemEmail: true });
+  } else {
+    // Manda só pro e-mail digitado
+    registrarEvento(nivel, motivo, foto, { emailDestino: email });
+  }
+
+  fecharModalEmail();
+});
+
+modalBtnCancelar.addEventListener("click", fecharModalEmail);
+
+// Enter no campo confirma; Esc cancela
+modalCampoEmail.addEventListener("keydown", (evento) => {
+  if (evento.key === "Enter") modalBtnConfirmar.click();
+  if (evento.key === "Escape") fecharModalEmail();
 });
 
 
@@ -1187,7 +1238,7 @@ function construirLinkResposta(evento) {
   return `${window.location.origin}/resposta.html?dados=${dadosAlerta}`;
 }
 
-async function enviarEmailAlerta(evento) {
+async function enviarEmailAlerta(evento, emailDestino = null) {
   if (!estado.emailProntoParaEnviar) {
     console.log(
       "[e-mail não configurado] Alerta que seria enviado:",
@@ -1219,6 +1270,9 @@ async function enviarEmailAlerta(evento) {
     hora: evento.hora,
     link_formulario: linkFormulario,
     foto: fotoReduzida,
+    // Se veio um e-mail digitado, manda pra ele; senão, o
+    // servidor usa o destinatário de monitoramento padrão.
+    email_destino: emailDestino || undefined,
   };
 
   console.log(

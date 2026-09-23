@@ -679,3 +679,75 @@ body {
     transition: none;
   }
 }
+
+/* ===================================================
+   MODAL DE E-MAIL (ao registrar evento manual)
+=================================================== */
+
+.modal-fundo {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 6, 15, 0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.modal-fundo.escondida {
+  display: none;
+}
+
+.modal-caixa {
+  position: relative;
+  background: var(--card-bg);
+  border: 1px solid #1c2f57;
+  border-radius: 6px;
+  padding: 28px 26px;
+  max-width: 400px;
+  width: 100%;
+  animation: entrada-sistema 0.35s ease backwards;
+}
+
+.modal-titulo {
+  color: var(--cyan);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.modal-texto {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 11px 13px;
+  border-radius: 4px;
+  border: 1px solid var(--card-border);
+  background: #060a1a;
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1rem;
+  margin-bottom: 18px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.modal-input:focus-visible {
+  outline: none;
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 1px var(--cyan);
+}
+
+.modal-botoes {
+  display: flex;
+  gap: 10px;
+}
+
+.modal-botoes .botao {
+  flex: 1;
+}

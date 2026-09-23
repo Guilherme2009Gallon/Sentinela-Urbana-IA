@@ -30,7 +30,7 @@ module.exports = async (req, res) => {
     return;
   }
 
-  const { nivel, motivo, data, hora, link_formulario, foto } = req.body || {};
+  const { nivel, motivo, data, hora, link_formulario, foto, email_destino } = req.body || {};
 
   if (!nivel || !motivo || !data || !hora) {
     res.status(400).json({ sucesso: false, erro: "Faltam dados obrigatórios do alerta." });
@@ -42,7 +42,16 @@ module.exports = async (req, res) => {
   // Environment Variables). Veja o README para o passo a passo.
   const EMAIL_REMETENTE = process.env.EMAIL_REMETENTE;
   const EMAIL_SENHA_APP = process.env.EMAIL_SENHA_APP;
-  const EMAIL_DESTINATARIO = process.env.EMAIL_DESTINATARIO || EMAIL_REMETENTE;
+  const EMAIL_MONITORAMENTO = process.env.EMAIL_DESTINATARIO || EMAIL_REMETENTE;
+
+  // Se veio um e-mail digitado pela pessoa (email_destino) e ele
+  // tem formato válido, manda pra ele. Senão, usa o e-mail de
+  // monitoramento padrão (caso dos alertas automáticos).
+  const emailValido =
+    typeof email_destino === "string" &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email_destino.trim());
+
+  const EMAIL_DESTINATARIO = emailValido ? email_destino.trim() : EMAIL_MONITORAMENTO;
 
   if (!EMAIL_REMETENTE || !EMAIL_SENHA_APP) {
     console.error("EMAIL_REMETENTE ou EMAIL_SENHA_APP não configurados nas variáveis de ambiente.");

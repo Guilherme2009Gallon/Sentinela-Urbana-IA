@@ -149,6 +149,39 @@
 
 </div>
 
+<!-- Janela para digitar o e-mail ao registrar um evento manual -->
+<div id="modal-email" class="modal-fundo escondida">
+  <div class="modal-caixa">
+    <div class="mira-canto mira-tl"></div>
+    <div class="mira-canto mira-tr"></div>
+    <div class="mira-canto mira-bl"></div>
+    <div class="mira-canto mira-br"></div>
+
+    <h2 class="modal-titulo">Registrar alerta</h2>
+    <p class="modal-texto">
+      Digite o e-mail para receber este alerta. Deixe em branco para
+      apenas registrar no histórico, sem enviar e-mail.
+    </p>
+
+    <input
+      type="email"
+      id="modal-campo-email"
+      class="modal-input"
+      placeholder="seu@email.com"
+      autocomplete="email"
+    >
+
+    <div class="modal-botoes">
+      <button id="modal-btn-confirmar" class="botao botao-alerta">
+        Confirmar
+      </button>
+      <button id="modal-btn-cancelar" class="botao botao-secundario">
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- Bibliotecas de detecção (TensorFlow.js + modelo COCO-SSD) -->
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js"></script>
