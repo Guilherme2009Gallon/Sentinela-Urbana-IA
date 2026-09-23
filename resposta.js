@@ -153,7 +153,6 @@ async function enviarParaGoogleForms(nome, resposta, detalhes) {
     await fetch(endpoint, {
       method: "POST",
       mode: "no-cors",
-      credentials: "include",
       body: dados,
     });
     return true;
