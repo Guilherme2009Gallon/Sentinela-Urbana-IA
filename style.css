@@ -1133,3 +1133,23 @@ body {
   left: 0;
   color: var(--cyan);
 }
+
+
+/* rótulo "Desenvolvido por" acima dos nomes */
+.capa-integrantes-rotulo {
+  margin-top: 26px;
+  margin-bottom: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-shadow:
+    0 0 8px rgba(4, 6, 15, 0.95),
+    0 0 8px rgba(4, 6, 15, 0.95);
+}
+
+/* o espaço acima agora vem do rótulo, não da lista */
+.capa-integrantes {
+  margin-top: 0;
+}
