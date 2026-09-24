@@ -923,15 +923,19 @@ body {
   border-radius: 6px;
 }
 
-.capa-svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+.capa-svg-REMOVIDO {
+  display: none;
 }
 
-/* grade deslizando lentamente */
+/* grade deslizando lentamente (cobre toda a capa) */
 .capa-grade-anim {
+  position: absolute;
+  inset: -40px;
+  background-image:
+    linear-gradient(to right, #12325a 1px, transparent 1px),
+    linear-gradient(to bottom, #12325a 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.35;
   animation: capa-grade-mover 8s linear infinite;
 }
 
@@ -940,10 +944,56 @@ body {
   to   { transform: translateY(40px); }
 }
 
-/* varredura do radar girando */
-.capa-varredura {
-  transform-box: view-box;
-  transform-origin: 400px 250px;
+/* radar circular centralizado — sempre no meio, redondo de
+   verdade (não depende do formato do painel) */
+.capa-radar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 340px;
+  height: 340px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.capa-radar-anel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid #12325a;
+  border-radius: 50%;
+}
+
+.capa-radar-anel-1 { width: 34%;  height: 34%;  opacity: 0.7; }
+.capa-radar-anel-2 { width: 66%;  height: 66%;  opacity: 0.5; }
+.capa-radar-anel-3 { width: 100%; height: 100%; opacity: 0.4; }
+
+.capa-radar-centro {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  background: var(--cyan);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 8px var(--cyan);
+}
+
+/* a varredura é um cone criado com conic-gradient, que gira em
+   torno do próprio centro — fica sempre alinhado com os anéis */
+.capa-radar-varredura {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(0, 240, 255, 0.35) 0deg,
+    rgba(0, 240, 255, 0.08) 30deg,
+    transparent 60deg,
+    transparent 360deg
+  );
   animation: capa-girar 5s linear infinite;
 }
 
@@ -1045,4 +1095,30 @@ body {
 @media (max-width: 600px) {
   .capa-titulo { font-size: 2rem; }
   .slide-capa { min-height: 280px; }
+  .capa-radar { width: 240px; height: 240px; }
+}
+
+
+/* nomes dos integrantes na capa */
+.capa-integrantes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 22px;
+  margin-top: 26px;
+}
+
+.capa-integrantes span {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.82rem;
+  color: var(--text);
+  position: relative;
+  padding-left: 16px;
+}
+
+.capa-integrantes span::before {
+  content: "▹";
+  position: absolute;
+  left: 0;
+  color: var(--cyan);
 }

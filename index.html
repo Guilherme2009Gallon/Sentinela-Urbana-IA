@@ -26,32 +26,17 @@
       <div class="slide slide-ativo slide-capa">
         <!-- Fundo animado: grade + radar + partículas -->
         <div class="capa-fundo" aria-hidden="true">
-          <svg class="capa-svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice">
-            <defs>
-              <radialGradient id="capa-varredura-grad" cx="0%" cy="0%" r="100%">
-                <stop offset="0%" stop-color="#00F0FF" stop-opacity="0.35" />
-                <stop offset="100%" stop-color="#00F0FF" stop-opacity="0" />
-              </radialGradient>
-              <pattern id="capa-grade" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#12325a" stroke-width="1" opacity="0.5"/>
-              </pattern>
-            </defs>
+          <!-- grade de fundo (deslizando) -->
+          <div class="capa-grade-anim"></div>
 
-            <!-- grade de fundo -->
-            <rect width="800" height="500" fill="url(#capa-grade)" class="capa-grade-anim" />
-
-            <!-- círculos concêntricos do radar (centralizados) -->
-            <g transform="translate(400 250)">
-              <circle r="80" fill="none" stroke="#12325a" stroke-width="1" opacity="0.6" />
-              <circle r="150" fill="none" stroke="#12325a" stroke-width="1" opacity="0.5" />
-              <circle r="220" fill="none" stroke="#12325a" stroke-width="1" opacity="0.4" />
-              <!-- varredura girando -->
-              <g class="capa-varredura">
-                <path d="M 0 0 L 0 -220 A 220 220 0 0 1 150 -160 Z" fill="url(#capa-varredura-grad)" />
-              </g>
-              <circle r="3" fill="#00F0FF" />
-            </g>
-          </svg>
+          <!-- radar circular, centralizado e autocontido -->
+          <div class="capa-radar">
+            <div class="capa-radar-anel capa-radar-anel-1"></div>
+            <div class="capa-radar-anel capa-radar-anel-2"></div>
+            <div class="capa-radar-anel capa-radar-anel-3"></div>
+            <div class="capa-radar-varredura"></div>
+            <div class="capa-radar-centro"></div>
+          </div>
 
           <!-- partículas subindo -->
           <div class="capa-particulas">
@@ -69,6 +54,11 @@
             Monitoramento inteligente de segurança urbana com visão computacional
             em tempo real.
           </p>
+          <div class="capa-integrantes">
+            <span>Bernardo Rebello</span>
+            <span>Felipe Menezes</span>
+            <span>Guilherme Herrera</span>
+          </div>
         </div>
       </div>
 
