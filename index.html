@@ -8,6 +8,86 @@
 </head>
 <body>
 
+<!-- ===================================================
+     APRESENTAÇÃO EM SLIDES (tela de abertura)
+     Edite os títulos e textos livremente abaixo. Para
+     adicionar ou remover um slide, copie/apague um bloco
+     inteiro <div class="slide">...</div>.
+=================================================== -->
+<div id="apresentacao" class="apresentacao">
+  <div class="apresentacao-caixa">
+    <div class="mira-canto mira-tl"></div>
+    <div class="mira-canto mira-tr"></div>
+    <div class="mira-canto mira-bl"></div>
+    <div class="mira-canto mira-br"></div>
+
+    <div class="slides-area">
+      <!-- SLIDE 1 -->
+      <div class="slide slide-ativo">
+        <span class="slide-tag">Sentinela Urbana IA</span>
+        <h1 class="slide-titulo">Monitoramento inteligente de segurança urbana</h1>
+        <p class="slide-texto">
+          Um sistema de visão computacional que analisa imagens de câmera
+          em tempo real para detectar situações de risco em espaços públicos.
+        </p>
+      </div>
+
+      <!-- SLIDE 2 -->
+      <div class="slide">
+        <span class="slide-tag">O problema</span>
+        <h1 class="slide-titulo">Monitorar tudo, o tempo todo, é humanamente inviável</h1>
+        <p class="slide-texto">
+          Uma cidade tem câmeras demais para poucos olhos humanos. Situações
+          de risco passam despercebidas simplesmente porque ninguém consegue
+          assistir a tudo ao mesmo tempo.
+        </p>
+      </div>
+
+      <!-- SLIDE 3 -->
+      <div class="slide">
+        <span class="slide-tag">A solução</span>
+        <h1 class="slide-titulo">Uma IA que observa e alerta por você</h1>
+        <p class="slide-texto">
+          O Sentinela detecta automaticamente três tipos de risco:
+        </p>
+        <ul class="slide-lista">
+          <li><b>Pessoa em área restrita</b> — alguém onde não deveria estar</li>
+          <li><b>Aglomeração</b> — concentração incomum de pessoas</li>
+          <li><b>Objeto suspeito</b> — item abandonado sem supervisão</li>
+        </ul>
+      </div>
+
+      <!-- SLIDE 4 -->
+      <div class="slide">
+        <span class="slide-tag">Como funciona</span>
+        <h1 class="slide-titulo">Tudo no navegador, em tempo real</h1>
+        <p class="slide-texto">
+          A detecção roda direto no navegador (TensorFlow.js), sem enviar
+          imagens para servidor nenhum. Ao identificar um risco, o sistema
+          registra o evento com foto e pode notificar a equipe de monitoramento.
+        </p>
+      </div>
+
+      <!-- SLIDE 5 -->
+      <div class="slide">
+        <span class="slide-tag">Demonstração</span>
+        <h1 class="slide-titulo">Vamos ver na prática</h1>
+        <p class="slide-texto">
+          A seguir, o painel de monitoramento ao vivo. Ative a câmera,
+          desenhe a área restrita e veja o sistema detectando em tempo real.
+        </p>
+      </div>
+    </div>
+
+    <div class="apresentacao-rodape">
+      <button id="slide-anterior" class="botao botao-secundario">← Voltar</button>
+      <span id="slide-indicador" class="slide-indicador">1 / 5</span>
+      <button id="slide-proximo" class="botao botao-secundario">Avançar →</button>
+      <button id="slide-iniciar" class="botao botao-alerta">Iniciar sistema →</button>
+    </div>
+  </div>
+</div>
+
 <div class="app">
 
   <!-- ===================================================
@@ -19,6 +99,9 @@
       <span class="marca-sub">visão computacional · análise de risco · tempo real</span>
     </div>
     <div class="status-geral">
+      <button id="btn-ver-apresentacao" class="botao botao-secundario botao-mini" title="Ver a apresentação de novo">
+        Apresentação
+      </button>
       <span id="relogio" class="relogio">--:--:--</span>
       <span id="status-camera" class="pilula pilula-offline">
         <span class="ponto"></span>

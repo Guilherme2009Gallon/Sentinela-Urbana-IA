@@ -751,3 +751,150 @@ body {
 .modal-botoes .botao {
   flex: 1;
 }
+
+
+/* ===================================================
+   APRESENTAÇÃO EM SLIDES (tela de abertura)
+=================================================== */
+
+.apresentacao {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: var(--bg);
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(0, 240, 255, 0.06), transparent 40%),
+    radial-gradient(circle at 85% 90%, rgba(0, 240, 255, 0.04), transparent 40%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.apresentacao.escondida {
+  display: none;
+}
+
+.apresentacao-caixa {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  min-height: 420px;
+  background: var(--card-bg);
+  border: 1px solid #1c2f57;
+  border-radius: 8px;
+  padding: 48px 44px 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.slides-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.slide {
+  display: none;
+  width: 100%;
+  animation: slide-entra 0.4s ease;
+}
+
+.slide.slide-ativo {
+  display: block;
+}
+
+@keyframes slide-entra {
+  from { opacity: 0; transform: translateX(12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.slide-tag {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 16px;
+}
+
+.slide-titulo {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.slide-texto {
+  font-size: 1.05rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+.slide-lista {
+  margin-top: 14px;
+  padding-left: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.slide-lista li {
+  font-size: 1rem;
+  color: var(--text-dim);
+  padding-left: 18px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.slide-lista li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: var(--cyan);
+}
+
+.slide-lista li b {
+  color: var(--text);
+}
+
+.apresentacao-rodape {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 20px;
+  border-top: 1px solid var(--card-border);
+  margin-top: 20px;
+}
+
+.slide-indicador {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+/* O botão "Iniciar sistema" ocupa a ponta direita; some até o
+   último slide (controlado pelo JS via classe .escondido) */
+#slide-iniciar {
+  margin-left: auto;
+}
+
+#slide-proximo.escondido,
+#slide-iniciar.escondido {
+  display: none;
+}
+
+.botao-mini {
+  padding: 4px 10px;
+  font-size: 0.75rem;
+}
+
+@media (max-width: 600px) {
+  .slide-titulo { font-size: 1.4rem; }
+  .apresentacao-caixa { padding: 36px 24px 20px; }
+  .apresentacao-rodape { flex-wrap: wrap; }
+  #slide-iniciar { margin-left: 0; width: 100%; }
+}

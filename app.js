@@ -1306,3 +1306,70 @@ async function enviarEmailAlerta(evento, emailDestino = null) {
     console.error("Erro ao enviar e-mail:", erro);
   }
 }
+
+// =========================================================
+// APRESENTAÇÃO EM SLIDES (tela de abertura)
+// =========================================================
+
+(function configurarApresentacao() {
+  const apresentacao = document.getElementById("apresentacao");
+  if (!apresentacao) return;
+
+  const slides = Array.from(apresentacao.querySelectorAll(".slide"));
+  const btnAnterior = document.getElementById("slide-anterior");
+  const btnProximo = document.getElementById("slide-proximo");
+  const btnIniciar = document.getElementById("slide-iniciar");
+  const indicador = document.getElementById("slide-indicador");
+  const btnVerApresentacao = document.getElementById("btn-ver-apresentacao");
+
+  let slideAtual = 0;
+
+  function mostrarSlide(indice) {
+    slides.forEach((s, i) => {
+      s.classList.toggle("slide-ativo", i === indice);
+    });
+    slideAtual = indice;
+
+    indicador.textContent = `${indice + 1} / ${slides.length}`;
+
+    // Botão "Voltar" some no primeiro slide
+    btnAnterior.style.visibility = indice === 0 ? "hidden" : "visible";
+
+    // No último slide, troca "Avançar" pelo "Iniciar sistema"
+    const ultimo = indice === slides.length - 1;
+    btnProximo.classList.toggle("escondido", ultimo);
+    btnIniciar.classList.toggle("escondido", !ultimo);
+  }
+
+  function fecharApresentacao() {
+    apresentacao.classList.add("escondida");
+  }
+
+  function abrirApresentacao() {
+    mostrarSlide(0);
+    apresentacao.classList.remove("escondida");
+  }
+
+  btnProximo.addEventListener("click", () => {
+    if (slideAtual < slides.length - 1) mostrarSlide(slideAtual + 1);
+  });
+
+  btnAnterior.addEventListener("click", () => {
+    if (slideAtual > 0) mostrarSlide(slideAtual - 1);
+  });
+
+  btnIniciar.addEventListener("click", fecharApresentacao);
+
+  if (btnVerApresentacao) {
+    btnVerApresentacao.addEventListener("click", abrirApresentacao);
+  }
+
+  // Setas do teclado também navegam
+  document.addEventListener("keydown", (evento) => {
+    if (apresentacao.classList.contains("escondida")) return;
+    if (evento.key === "ArrowRight") btnProximo.click();
+    if (evento.key === "ArrowLeft") btnAnterior.click();
+  });
+
+  mostrarSlide(0);
+})();
